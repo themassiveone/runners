@@ -1,6 +1,2 @@
 .env
-.idea/*
-!.idea/gradle.xml
-!.idea/modules.xml
-!.idea/compiler.xml
-!.idea/modules
+.idea/
