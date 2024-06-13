@@ -3,7 +3,7 @@ Collection of hands-off easy to configure github action runner clusters for a va
 
 ## Structure
 
-- `control-plane/`: Contains the source code of the control plane used to created github runners automatically for you.
+- `controlplane/`: Contains the source code of the control plane used to created github runners automatically for you.
 - `examples/`: Contains directories for different project scenarios, each with its own `docker-compose.yml`, `.env.example`, `runner.flake`, and additional configuration files.
 - `scripts/`: Contains utility scripts for managing the setup and automation of runner tokens.
 
