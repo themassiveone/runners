@@ -25,7 +25,7 @@ send_request_with_retry() {
         fi
 
         if [ $(echo "$response" | grep 'token') ]; then
-            ./config.sh --url https://github.com/${GITHUB_ORG} --token $(echo "$response" | jq -r '.token')
+            ./config.sh --url https://github.com/${GITHUB_ORG} --token $(echo "$response" | jq -r '.token') --labels unity,nugetforunity
             ./run.sh
             return 0
         else

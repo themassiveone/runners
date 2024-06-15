@@ -18,4 +18,5 @@ services:
     image: runner
     environment:
       - "GITHUB_ORG=${GITHUB_ORG}"
-    
+    deploy:
+      replicas: 2
