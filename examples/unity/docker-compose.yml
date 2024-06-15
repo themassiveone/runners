@@ -21,3 +21,4 @@ services:
     volumes:
       - /usr/bin/docker:/usr/bin/docker
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./.runner.env:/actions-runner/.env
