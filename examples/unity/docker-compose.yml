@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  controlplane:
+    build:
+      context: ../../controlplane
+      dockerfile: Dockerfile
+    image: controlplane
+    ports:
+      - "8080:8080"
+    environment:
+      - "GITHUB_TOKEN=${GITHUB_TOKEN}"
+      - "GITHUB_ORG=${GITHUB_ORG}"
