@@ -17,6 +17,7 @@ RUN apt-get update && \
 
 # Install NugetForUnity
 RUN dotnet tool install --global NuGetForUnity.Cli
+ENV PATH="$PATH:/root/.dotnet/tools"
 
 # install github runner
 RUN mkdir actions-runner && cd actions-runner \
