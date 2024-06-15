@@ -1,6 +1,18 @@
 # Self-hosted GitHub actions runner cluster IAC templates 
 Collection of hands-off easy to configure github action runner clusters for a variety of project types.
 
+## Disclaimer
+Some examples require passing through docker engine from the host system, 
+so siblings can be created from within a container. 
+```yaml
+volumes:
+  - /usr/bin/docker:/usr/bin/docker
+  - /var/run/docker.sock:/var/run/docker.sock
+```
+This is a required workaround for workflows, that rely on certain docker images. It is a more reliable approach than [docker-in-docker](https://github.com/jpetazzo/dind). 
+Some example containers used in potential workflows include:
+- [game-ci](https://github.com/game-ci/docker/)
+
 ## Structure
 
 - `controlplane/`: Contains the source code of the control plane used to created github runners automatically for you.
