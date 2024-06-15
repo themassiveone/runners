@@ -1,46 +1,37 @@
-FROM alpine:latest
+FROM ubuntu:22.04
 
-# Install Docker and openrc
-RUN apk add --no-cache docker openrc && \
-    addgroup root docker && \
-    rc-update add docker boot 
+# install docker-engine
+RUN apt-get update \
+    && apt-get install -y ca-certificates curl \
+    && install -m 0755 -d /etc/apt/keyrings \
+    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc \
+    && chmod a+r /etc/apt/keyrings/docker.asc \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+# install dotnet-8 \
+RUN apt-get update && \
+    apt-get install -y dotnet-sdk-8.0 
 
-# Install dotnet 7
-RUN  apk add --no-cache \
-     bash \
-     ca-certificates-bundle \
-     libgcc \
-     libssl3 \
-     libstdc++ \
-     zlib \
-     libgdiplus \
-     icu-libs \
-     && wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
-     chmod +x ./dotnet-install.sh && \
-     ./dotnet-install.sh --version latest --channel 8.0
-    
-# Set environment variables for .NET
-ENV DOTNET_ROOT=/root/.dotnet \
-    PATH=$PATH:/root/.dotnet:/root/.dotnet/tools \
-    DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 # Install NugetForUnity
 RUN dotnet tool install --global NuGetForUnity.Cli
 
-# Install Github Runner
-RUN apk add --no-cache curl \
-    musl-dev \
-    && mkdir actions-runner && cd actions-runner \
+# install github runner
+RUN mkdir actions-runner && cd actions-runner \
     && curl -o actions-runner-linux-x64-2.317.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.317.0/actions-runner-linux-x64-2.317.0.tar.gz \
-    && echo "9e883d210df8c6028aff475475a457d380353f9d01877d51cc01a17b2a91161d  actions-runner-linux-x64-2.317.0.tar.gz" | sha256sum -c - \
-    && tar xzf ./actions-runner-linux-x64-2.317.0.tar.gz
-ENV RUNNER_ALLOW_RUNASROOT=1
+    && echo "9e883d210df8c6028aff475475a457d380353f9d01877d51cc01a17b2a91161d  actions-runner-linux-x64-2.317.0.tar.gz" | shasum -a 256 -c \
+    && tar xzf ./actions-runner-linux-x64-2.317.0.tar.gz 
+
 WORKDIR actions-runner
 
+# get token fetch script
+COPY ./start-runner.sh .
+RUN chmod +x ./start-runner.sh
 
-# configure runner
-COPY fetch-token.sh ./
-RUN ./bin/installdependencies.sh
-RUN chmod +x ./fetch-token.sh
-RUN ./config.sh --url https://github.com/${GITHUB_ORG} --token $(./fetch-token.sh) 
+
+RUN apt-get install -y jq
+ENV RUNNER_ALLOW_RUNASROOT=1
+ 
+ENTRYPOINT "./start-runner.sh"

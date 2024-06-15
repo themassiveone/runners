@@ -16,3 +16,6 @@ services:
       context: .
       dockerfile: runner.Dockerfile
     image: runner
+    environment:
+      - "GITHUB_ORG=${GITHUB_ORG}"
+    
