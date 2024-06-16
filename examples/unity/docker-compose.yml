@@ -14,6 +14,7 @@ services:
     image: runner
     environment:
       - "GITHUB_ORG=${GITHUB_ORG}"
+      - "RUNNER_LABELS=${RUNNER_LABELS}"
     deploy:
       replicas: 2
     volumes:
