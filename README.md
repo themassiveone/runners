@@ -2,15 +2,21 @@
 Collection of hands-off easy to configure github action runner clusters for a variety of project types.
 
 ## Disclaimer
-Some examples require passing through docker engine from the host system, 
+The standard approach to deploying many runners for github actions is using [Kubernetes ARC](https://github.com/actions/actions-runner-controller). 
+Unfortunately running docker containers from within CI in order to test some otherwise not available components is hasslefull within kubernetes. 
+Both [docker-in-docker](https://github.com/jpetazzo/dind) and docker socket volume passthrough have inconveniences of their own.
+
+I chose docker socket passthrough as its more reliable.
+
+Thats why some examples require passing through docker engine from the host system, 
 so siblings can be created from within a container. 
 ```yaml
 volumes:
   - /usr/bin/docker:/usr/bin/docker
   - /var/run/docker.sock:/var/run/docker.sock
-```
-This is a required workaround for workflows, that rely on certain docker images. It is a more reliable approach than [docker-in-docker](https://github.com/jpetazzo/dind). 
-Some example containers used in potential workflows include:
+``` 
+
+Example docker containers required in some workflows:
 - [game-ci](https://github.com/game-ci/docker/)
 
 ## Structure
